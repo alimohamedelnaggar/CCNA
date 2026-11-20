@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #050914;
+  --color-navy-900: #071126;
+  --color-navy-850: #0a1730;
+  --color-navy-800: #0e1e3f;
+  --color-navy-700: #14295a;
+  --color-accent-300: #7dd3fc;
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #0ea5e9;
+  --color-accent-600: #0284c7;
+  --color-electric: #3b82f6;
+  --color-mint: #34d399;
+
+  --font-sans: "Cairo", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Cairo", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-navy-950);
+    background-image:
+      radial-gradient(ellipse 70% 45% at 85% -10%, rgba(14, 165, 233, 0.16), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 5% 20%, rgba(59, 130, 246, 0.1), transparent 70%),
+      linear-gradient(rgba(99, 151, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 151, 255, 0.035) 1px, transparent 1px);
+    background-size: auto, auto, 54px 54px, 54px 54px;
+    background-attachment: fixed;
+    color: #cbd5e1;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: rgba(56, 189, 248, 0.3);
+    color: #f8fafc;
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #050914;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1d3768;
+    border-radius: 99px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2b5091;
+  }
+}
+
+@utility surface {
+  background: linear-gradient(145deg, rgba(14, 30, 63, 0.78), rgba(7, 17, 38, 0.86));
+  border: 1px solid rgba(96, 165, 250, 0.14);
+  box-shadow: 0 18px 50px -30px rgba(0, 0, 0, 0.9);
+}
+
+@utility surface-soft {
+  background: rgba(11, 24, 51, 0.6);
+  border: 1px solid rgba(96, 165, 250, 0.1);
+}
+
+@utility glow-text {
+  background: linear-gradient(100deg, #f8fafc 10%, #7dd3fc 55%, #38bdf8 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility tech {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.09);
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  border-radius: 5px;
+  padding: 0 5px;
+  line-height: 1.6;
+}
+
+.lesson-prose {
+  font-size: 1.02rem;
+  line-height: 2.05;
+  color: #b9c7dd;
+}
+
+.lesson-prose p {
+  margin: 0 0 1.15rem;
+}
+
+.lesson-prose strong {
+  color: #e2f4ff;
+  font-weight: 700;
+}
+
+.lesson-prose ul,
+.lesson-prose ol {
+  margin: 0 0 1.3rem;
+  padding-inline-start: 1.3rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lesson-prose li::marker {
+  color: #38bdf8;
+}
+
+.lesson-prose h4 {
+  color: #f1f5f9;
+  font-weight: 700;
+  margin: 1.6rem 0 0.7rem;
+}
+
+.code-surface {
+  direction: ltr;
+  text-align: left;
+  background: #040a17;
+  border: 1px solid rgba(96, 165, 250, 0.18);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.code-surface pre {
+  margin: 0;
+  padding: 1.15rem 1.25rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.85;
+  color: #d5e5ff;
+  tab-size: 2;
+}
+
+.diagram-grid {
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.step-enter {
+  animation: step-fade 0.45s ease both;
+}
+
+@keyframes step-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
