@@ -31,6 +31,30 @@ import {
   InterfaceCountersDashboard,
   SpeedNegotiationDiagram,
 } from '../diagrams/InterfaceIssueDiagrams'
+import {
+  TcpFlagsDiagram,
+  TcpHandshakeDiagram,
+  TcpRetransmissionDiagram,
+  TcpSegmentHeaderDiagram,
+  TcpSequenceAckDiagram,
+  TcpSlidingWindowDiagram,
+  TcpTerminationDiagram,
+  TcpUdpCommunicationDiagram,
+  TcpUdpPortDiagram,
+  UdpDatagramHeaderDiagram,
+} from '../diagrams/TransportDiagrams'
+import {
+  BinaryConversionDiagram,
+  BlockSizeDiagram,
+  FlsmVlsmDiagram,
+  IpRangeDiagram,
+  Ipv4LabTopologyDiagram,
+  Ipv4StructureDiagram,
+  NetworkHostDiagram,
+  Subnet26Diagram,
+  SubnetMaskCidrDiagram,
+  VlsmAllocationDiagram,
+} from '../diagrams/Ipv4Diagrams'
 import { Callout } from './Callout'
 import { CodeBlock } from './CodeBlock'
 import { DataTable } from './DataTable'
@@ -108,6 +132,46 @@ function Diagram({ id }: { id: DiagramId }) {
       return <InterfaceCountersDashboard />
     case 'issue-cable-flow':
       return <CableTroubleshootingFlowDiagram />
+    case 'transport-tcp-udp':
+      return <TcpUdpCommunicationDiagram />
+    case 'transport-tcp-header':
+      return <TcpSegmentHeaderDiagram />
+    case 'transport-udp-header':
+      return <UdpDatagramHeaderDiagram />
+    case 'transport-handshake':
+      return <TcpHandshakeDiagram />
+    case 'transport-termination':
+      return <TcpTerminationDiagram />
+    case 'transport-flags':
+      return <TcpFlagsDiagram />
+    case 'transport-seq-ack':
+      return <TcpSequenceAckDiagram />
+    case 'transport-retransmission':
+      return <TcpRetransmissionDiagram />
+    case 'transport-sliding-window':
+      return <TcpSlidingWindowDiagram />
+    case 'transport-port-flow':
+      return <TcpUdpPortDiagram />
+    case 'ipv4-32bit':
+      return <Ipv4StructureDiagram />
+    case 'ipv4-binary-conversion':
+      return <BinaryConversionDiagram />
+    case 'ipv4-network-host':
+      return <NetworkHostDiagram />
+    case 'ipv4-subnet-mask-cidr':
+      return <SubnetMaskCidrDiagram />
+    case 'ipv4-range':
+      return <IpRangeDiagram />
+    case 'ipv4-subnet-26':
+      return <Subnet26Diagram />
+    case 'ipv4-block-size':
+      return <BlockSizeDiagram />
+    case 'ipv4-flsm-vlsm':
+      return <FlsmVlsmDiagram />
+    case 'ipv4-vlsm-allocation':
+      return <VlsmAllocationDiagram />
+    case 'ipv4-lab-topology':
+      return <Ipv4LabTopologyDiagram />
   }
 }
 
