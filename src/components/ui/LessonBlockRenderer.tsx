@@ -659,6 +659,37 @@ import {
   SecurePasswordHandlingDiagram,
   Sfa2faMfaDiagram,
 } from '../diagrams/PasswordSecurityDiagrams'
+import {
+  VpnOverviewDiagram,
+  VpnTunnelPathDiagram,
+  VpnEndpointsDiagram,
+  VpnTunnelWorkflowDiagram,
+  VpnEncapsulationEncryptionDiagram,
+  VpnRemoteTopologyDiagram,
+  VpnRemoteAuthFlowDiagram,
+  VpnTunnelSplitDiagram,
+  VpnSiteTopologyDiagram,
+  VpnSiteFlowDiagram,
+  VpnArchitectureCompareDiagram,
+  VpnIpsecGoalsDiagram,
+  VpnIpsecComponentsDiagram,
+  VpnAhProtectionDiagram,
+  VpnEspProtectionDiagram,
+  VpnAhVsEspDiagram,
+  VpnIkeNegotiationDiagram,
+  VpnSaConceptDiagram,
+  VpnPacketModesDiagram,
+  VpnModeCompareDiagram,
+  VpnEncryptionFlowDiagram,
+  VpnPskAuthDiagram,
+  VpnCertAuthDiagram,
+  VpnAntiReplayDiagram,
+  VpnTroubleshootingTreeDiagram,
+  VpnLabArchitectureDiagram,
+  VpnLabModesDiagram,
+  VpnLabTroubleshootDiagram,
+  VpnSummaryDiagram,
+} from '../diagrams/VpnDiagrams'
 import { Callout } from './Callout'
 import { CodeBlock } from './CodeBlock'
 import { DataTable } from './DataTable'
@@ -1848,6 +1879,64 @@ function Diagram({ id }: { id: DiagramId }) {
       return <LabCertValidationDiagram />
     case 'ps-layered-auth':
       return <LayeredAuthArchitectureDiagram />
+    case 'vpn-overview':
+      return <VpnOverviewDiagram />
+    case 'vpn-tunnel-path':
+      return <VpnTunnelPathDiagram />
+    case 'vpn-endpoints':
+      return <VpnEndpointsDiagram />
+    case 'vpn-workflow':
+      return <VpnTunnelWorkflowDiagram />
+    case 'vpn-protection-functions':
+      return <VpnEncapsulationEncryptionDiagram />
+    case 'vpn-remote-topology':
+      return <VpnRemoteTopologyDiagram />
+    case 'vpn-remote-auth':
+      return <VpnRemoteAuthFlowDiagram />
+    case 'vpn-tunnel-split':
+      return <VpnTunnelSplitDiagram />
+    case 'vpn-site-topology':
+      return <VpnSiteTopologyDiagram />
+    case 'vpn-site-flow':
+      return <VpnSiteFlowDiagram />
+    case 'vpn-architecture-compare':
+      return <VpnArchitectureCompareDiagram />
+    case 'vpn-ipsec-goals':
+      return <VpnIpsecGoalsDiagram />
+    case 'vpn-ipsec-components':
+      return <VpnIpsecComponentsDiagram />
+    case 'vpn-ah-protection':
+      return <VpnAhProtectionDiagram />
+    case 'vpn-esp-protection':
+      return <VpnEspProtectionDiagram />
+    case 'vpn-ah-vs-esp':
+      return <VpnAhVsEspDiagram />
+    case 'vpn-ike-negotiation':
+      return <VpnIkeNegotiationDiagram />
+    case 'vpn-sa-concept':
+      return <VpnSaConceptDiagram />
+    case 'vpn-packet-modes':
+      return <VpnPacketModesDiagram />
+    case 'vpn-mode-compare':
+      return <VpnModeCompareDiagram />
+    case 'vpn-encryption-flow':
+      return <VpnEncryptionFlowDiagram />
+    case 'vpn-psk-auth':
+      return <VpnPskAuthDiagram />
+    case 'vpn-cert-auth':
+      return <VpnCertAuthDiagram />
+    case 'vpn-anti-replay':
+      return <VpnAntiReplayDiagram />
+    case 'vpn-troubleshooting-tree':
+      return <VpnTroubleshootingTreeDiagram />
+    case 'vpn-lab-architecture':
+      return <VpnLabArchitectureDiagram />
+    case 'vpn-lab-modes':
+      return <VpnLabModesDiagram />
+    case 'vpn-lab-troubleshoot':
+      return <VpnLabTroubleshootDiagram />
+    case 'vpn-summary':
+      return <VpnSummaryDiagram />
   }
 }
 
