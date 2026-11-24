@@ -38,6 +38,7 @@ import { topic49Lesson } from './topic-4-9'
 import { topic51Lesson } from './topic-5-1'
 import { topic52Lesson } from './topic-5-2'
 import { topic53Lesson } from './topic-5-3'
+import { topic54Lesson } from './topic-5-4'
 
 /** Add new finished lessons here. Every topic without an entry gets an honest "coming soon" state. */
 export const lessons: Record<string, Lesson> = {
@@ -80,6 +81,7 @@ export const lessons: Record<string, Lesson> = {
   '5.1': topic51Lesson,
   '5.2': topic52Lesson,
   '5.3': topic53Lesson,
+  '5.4': topic54Lesson,
 }
 
 export function getLesson(topicId: string): Lesson | undefined {

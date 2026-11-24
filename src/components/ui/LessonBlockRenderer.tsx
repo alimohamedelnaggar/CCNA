@@ -627,6 +627,38 @@ import {
   UserVsPrivilegedDiagram,
   VerificationCommandExplorerDiagram,
 } from '../diagrams/DeviceAccessControlDiagrams'
+import {
+  AaaConceptsDiagram,
+  AccessScenariosDiagram,
+  AttackComparisonDiagram,
+  AuthFactorsDiagram,
+  BiometricFlowDiagram,
+  BiometricLimitsDiagram,
+  CaHierarchyDiagram,
+  CertificateStructureDiagram,
+  CertificateValidationFlowDiagram,
+  CredentialStuffingFlowDiagram,
+  EncryptionVsSignatureDiagram,
+  FarFrrDiagram,
+  HardwareKeyFlowDiagram,
+  HashingVsEncryptionDiagram,
+  LabCertValidationDiagram,
+  LabMfaChoiceDiagram,
+  LabPasswordStrengthDiagram,
+  LayeredAuthArchitectureDiagram,
+  LengthEntropyDiagram,
+  MfaFlowDiagram,
+  MfaMethodsDiagram,
+  PasswordManagementFlowDiagram,
+  PasswordManagerArchitectureDiagram,
+  PasswordPatternsDiagram,
+  PasswordSecurityOverviewDiagram,
+  PhishingRecoveryDiagram,
+  PkiArchitectureDiagram,
+  RateLimitingDiagram,
+  SecurePasswordHandlingDiagram,
+  Sfa2faMfaDiagram,
+} from '../diagrams/PasswordSecurityDiagrams'
 import { Callout } from './Callout'
 import { CodeBlock } from './CodeBlock'
 import { DataTable } from './DataTable'
@@ -1756,6 +1788,66 @@ function Diagram({ id }: { id: DiagramId }) {
       return <SecureConfigSequenceDiagram />
     case 'verification-command-explorer':
       return <VerificationCommandExplorerDiagram />
+    case 'ps-overview':
+      return <PasswordSecurityOverviewDiagram />
+    case 'ps-aaa-concepts':
+      return <AaaConceptsDiagram />
+    case 'ps-access-scenarios':
+      return <AccessScenariosDiagram />
+    case 'ps-password-patterns':
+      return <PasswordPatternsDiagram />
+    case 'ps-length-entropy':
+      return <LengthEntropyDiagram />
+    case 'ps-attack-comparison':
+      return <AttackComparisonDiagram />
+    case 'ps-credential-stuffing-flow':
+      return <CredentialStuffingFlowDiagram />
+    case 'ps-rate-limiting':
+      return <RateLimitingDiagram />
+    case 'ps-management-flow':
+      return <PasswordManagementFlowDiagram />
+    case 'ps-manager-architecture':
+      return <PasswordManagerArchitectureDiagram />
+    case 'ps-secure-handling':
+      return <SecurePasswordHandlingDiagram />
+    case 'ps-hashing-vs-encryption':
+      return <HashingVsEncryptionDiagram />
+    case 'ps-auth-factors':
+      return <AuthFactorsDiagram />
+    case 'ps-sfa-2fa-mfa':
+      return <Sfa2faMfaDiagram />
+    case 'ps-mfa-flow':
+      return <MfaFlowDiagram />
+    case 'ps-mfa-methods':
+      return <MfaMethodsDiagram />
+    case 'ps-hardware-key-flow':
+      return <HardwareKeyFlowDiagram />
+    case 'ps-phishing-recovery':
+      return <PhishingRecoveryDiagram />
+    case 'ps-pki-architecture':
+      return <PkiArchitectureDiagram />
+    case 'ps-ca-hierarchy':
+      return <CaHierarchyDiagram />
+    case 'ps-certificate-structure':
+      return <CertificateStructureDiagram />
+    case 'ps-cert-validation-flow':
+      return <CertificateValidationFlowDiagram />
+    case 'ps-encryption-vs-signature':
+      return <EncryptionVsSignatureDiagram />
+    case 'ps-biometric-flow':
+      return <BiometricFlowDiagram />
+    case 'ps-biometric-far-frr':
+      return <FarFrrDiagram />
+    case 'ps-biometric-limits':
+      return <BiometricLimitsDiagram />
+    case 'ps-lab-password-strength':
+      return <LabPasswordStrengthDiagram />
+    case 'ps-lab-mfa-choice':
+      return <LabMfaChoiceDiagram />
+    case 'ps-lab-cert-validation':
+      return <LabCertValidationDiagram />
+    case 'ps-layered-auth':
+      return <LayeredAuthArchitectureDiagram />
   }
 }
 
