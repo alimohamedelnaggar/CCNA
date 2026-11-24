@@ -17,6 +17,27 @@ import { topic22Lesson } from './topic-2-2'
 import { topic23Lesson } from './topic-2-3'
 import { topic24Lesson } from './topic-2-4'
 import { topic25Lesson } from './topic-2-5'
+import { topic26Lesson } from './topic-2-6'
+import { topic27Lesson } from './topic-2-7'
+import { topic28Lesson } from './topic-2-8'
+import { topic29Lesson } from './topic-2-9'
+import { topic31Lesson } from './topic-3-1'
+import { topic32Lesson } from './topic-3-2'
+import { topic33Lesson } from './topic-3-3'
+import { topic34Lesson } from './topic-3-4'
+import { topic35Lesson } from './topic-3-5'
+import { topic41Lesson } from './topic-4-1'
+import { topic42Lesson } from './topic-4-2'
+import { topic43Lesson } from './topic-4-3'
+import { topic44Lesson } from './topic-4-4'
+import { topic45Lesson } from './topic-4-5'
+import { topic46Lesson } from './topic-4-6'
+import { topic47Lesson } from './topic-4-7'
+import { topic48Lesson } from './topic-4-8'
+import { topic49Lesson } from './topic-4-9'
+import { topic51Lesson } from './topic-5-1'
+import { topic52Lesson } from './topic-5-2'
+import { topic53Lesson } from './topic-5-3'
 
 /** Add new finished lessons here. Every topic without an entry gets an honest "coming soon" state. */
 export const lessons: Record<string, Lesson> = {
@@ -38,6 +59,27 @@ export const lessons: Record<string, Lesson> = {
   '2.3': topic23Lesson,
   '2.4': topic24Lesson,
   '2.5': topic25Lesson,
+  '2.6': topic26Lesson,
+  '2.7': topic27Lesson,
+  '2.8': topic28Lesson,
+  '2.9': topic29Lesson,
+  '3.1': topic31Lesson,
+  '3.2': topic32Lesson,
+  '3.3': topic33Lesson,
+  '3.4': topic34Lesson,
+  '3.5': topic35Lesson,
+  '4.1': topic41Lesson,
+  '4.2': topic42Lesson,
+  '4.3': topic43Lesson,
+  '4.4': topic44Lesson,
+  '4.5': topic45Lesson,
+  '4.6': topic46Lesson,
+  '4.7': topic47Lesson,
+  '4.8': topic48Lesson,
+  '4.9': topic49Lesson,
+  '5.1': topic51Lesson,
+  '5.2': topic52Lesson,
+  '5.3': topic53Lesson,
 }
 
 export function getLesson(topicId: string): Lesson | undefined {

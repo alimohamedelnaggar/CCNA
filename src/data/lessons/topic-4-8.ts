@@ -1,0 +1,462 @@
+import type { Lesson } from '../types'
+
+const telnetSshRows: string[][] = [
+  ['Feature', 'Telnet', 'SSH'],
+  ['Default Port', 'TCP 23', 'TCP 22'],
+  ['Encryption', 'No', 'Yes'],
+  ['Authentication', 'Basic', 'Secure Authentication Methods'],
+  ['Confidentiality', 'No', 'Yes'],
+  ['Recommended for Secure Management', 'No', 'Yes'],
+]
+
+const accessRows: string[][] = [
+  ['Method', 'Console', 'Remote (Telnet / SSH)'],
+  ['Physical access', 'Required', 'Not required'],
+  ['Path', 'Console cable / management port', 'IP network'],
+  ['Typical use', 'Initial setup, recovery', 'Daily administration'],
+  ['Security concern', 'Physical control', 'Protocol and credential protection'],
+]
+
+const sshStepsRows: string[][] = [
+  ['1', 'TCP Connection Establishment', 'Client opens a TCP connection to the server port.'],
+  ['2', 'SSH Protocol Version Exchange', 'Both sides agree on the SSH protocol version.'],
+  ['3', 'Key Exchange', 'Session keys are established for the encrypted channel.'],
+  ['4', 'Server Authentication', 'Client checks the server host identity.'],
+  ['5', 'Encryption Setup', 'Encryption algorithms are activated for the session.'],
+  ['6', 'User Authentication', 'The user proves identity with credentials.'],
+  ['7', 'Secure Interactive Session', 'CLI commands travel through the encrypted session.'],
+]
+
+const sshRoleRows: string[][] = [
+  ['Concept', 'Role', 'CCNA note'],
+  ['SSH Client', 'Initiates the connection', 'Software or PC used by the administrator'],
+  ['SSH Server', 'Accepts the connection', 'Router or switch running SSH service'],
+  ['Host Key', 'Server identity', 'Used for server authentication, not user password'],
+  ['Key Exchange', 'Builds shared session keys', 'Conceptual here; details vary by implementation'],
+  ['Encryption Algorithms', 'Protect the session', 'Negotiated by the SSH peers'],
+  ['User Authentication', 'Checks username and password', 'Local database or AAA server'],
+  ['Secure Session', 'Carries CLI traffic', 'Encrypted after setup'],
+]
+
+const keySizeRows: string[][] = [
+  ['512-bit', 'Older / weak', 'Not recommended for modern secure management'],
+  ['1024-bit', 'Historically common', 'Support and acceptance depend on IOS and policy'],
+  ['2048-bit', 'Common educational choice', 'Use when supported by the platform'],
+  ['4096-bit', 'Stronger but heavier', 'Support depends on IOS version and platform'],
+]
+
+const rsaCommandRows: string[][] = [
+  ['hostname R1', 'Sets the device hostname used in key generation.'],
+  ['ip domain-name ccna.local', 'Sets the domain name used in key generation.'],
+  ['crypto key generate rsa modulus 2048', 'Generates an RSA key pair with the requested modulus.'],
+  ['end', 'Returns to privileged EXEC mode.'],
+]
+
+const localAuthRows: string[][] = [
+  ['Local Authentication', 'Device checks its own username database.', 'Small or lab environments; conceptual CCNA example.'],
+  ['AAA Server Authentication', 'Device asks an external AAA server.', 'Centralized policy, accounting and scale.'],
+]
+
+const usernameCommandRows: string[][] = [
+  ['username', 'Creates the local user account.'],
+  ['admin', 'The username used at the login prompt.'],
+  ['privilege 15', 'Assigns privilege level; 15 is the highest level.'],
+  ['secret StrongPassword123', 'Stores the password with stronger protection than plaintext password.'],
+]
+
+const transportRows: string[][] = [
+  ['transport input telnet', 'Telnet only', 'Insecure for management; plaintext'],
+  ['transport input ssh', 'SSH only', 'Recommended for secure remote management'],
+  ['transport input all', 'All supported transports', 'May allow Telnet; avoid for secure management'],
+]
+
+const vtyCommandRows: string[][] = [
+  ['hostname R1', 'Provides device identity for RSA key generation.'],
+  ['ip domain-name ccna.local', 'Provides domain name for RSA key generation.'],
+  ['username admin privilege 15 secret ...', 'Creates the local user used by SSH login.'],
+  ['crypto key generate rsa modulus 2048', 'Generates the RSA key pair needed by the SSH server.'],
+  ['ip ssh version 2', 'Restricts the device to SSH version 2 where supported.'],
+  ['line vty 0 4', 'Enters the virtual terminal line configuration range.'],
+  ['login local', 'Uses the local username database for authentication.'],
+  ['transport input ssh', 'Allows only SSH on these VTY lines.'],
+  ['end', 'Returns to privileged EXEC mode.'],
+]
+
+const sshVersionRows: string[][] = [
+  ['SSHv1', 'Older protocol', 'Considered weaker; avoid for secure management'],
+  ['SSHv2', 'Current preferred protocol', 'Improved authentication, encryption and integrity'],
+]
+
+const verificationRows: string[][] = [
+  ['show ip ssh', 'SSH status, version, timeout and retries', 'Values vary by IOS version and configuration'],
+  ['show ssh', 'Current SSH sessions', 'May be empty when nobody is connected'],
+  ['show crypto key mypubkey rsa', 'Public key information', 'Never shows or exposes the private key'],
+  ['show running-config', 'Effective configuration', 'Check hostname, domain, username and VTY lines'],
+  ['show users', 'Connected users and lines', 'Helps identify active remote sessions'],
+  ['show line', 'Line status including VTY', 'Helps find busy or misconfigured lines'],
+]
+
+const troubleshootingRows: string[][] = [
+  ['SSH server not enabled', 'Connection refused; show ip ssh is empty', 'SSH service not prepared or platform unsupported', 'show ip ssh; show running-config', 'Complete hostname, key and SSH configuration', 'SSH Enabled appears in show ip ssh'],
+  ['RSA keys not generated', 'SSH fails to start or key check is empty', 'Missing crypto key generate rsa', 'show crypto key mypubkey rsa', 'Generate RSA key pair with supported modulus', 'Public key information appears'],
+  ['Missing hostname', 'Key generation fails or uses poor identity', 'No hostname configured', 'show running-config', 'configure terminal then hostname R1', 'Hostname is set before key generation'],
+  ['Missing domain name', 'Key generation asks for or fails on domain', 'No ip domain-name configured', 'show running-config', 'Set ip domain-name ccna.local', 'Key generation completes'],
+  ['SSHv1 instead of v2', 'show ip ssh reports old version', 'ip ssh version 2 missing', 'show ip ssh', 'Apply ip ssh version 2', 'Version 2.0 is reported'],
+  ['Wrong username or password', 'Login denied repeatedly', 'Typo or wrong local credentials', 'show running-config', 'Recreate user with username ... secret', 'Correct credentials are accepted'],
+  ['Missing login local', 'Password prompt differs or login fails', 'VTY uses line password instead of local DB', 'show running-config; show line', 'Apply login local under VTY', 'Local username prompt is used'],
+  ['VTY lines not configured', 'Connection reaches IP but no CLI', 'No line vty range or lines busy', 'show line; show running-config', 'Configure line vty 0 4 (platform example)', 'Available VTY line accepts SSH'],
+  ['transport input telnet', 'SSH cannot connect; Telnet may be accepted', 'VTY allows Telnet only', 'show running-config', 'Use transport input ssh', 'SSH is accepted and Telnet is not'],
+  ['TCP port 22 blocked', 'Connection times out or is refused', 'ACL or firewall blocks port 22', 'show access-lists; show ip interface brief', 'Permit TCP 22 on the path', 'SSH handshake begins'],
+  ['Incorrect destination IP', 'Connection fails to reach the device', 'Wrong management address typed', 'show ip interface brief; ping', 'Use the configured management IP', 'Ping and SSH reach the device'],
+  ['No IP connectivity', 'Ping fails; SSH cannot start', 'Routing, interface or addressing problem', 'show ip interface brief; show ip route; ping', 'Fix IP, mask, interface or route', 'Ping succeeds before SSH test'],
+  ['No available VTY lines', 'Connection refused when sessions are full', 'All VTY lines occupied', 'show users; show line', 'Close unused sessions or expand range if platform allows', 'A VTY line becomes available'],
+  ['Unsupported RSA key size', 'Key generation fails', 'Modulus unsupported by IOS/platform', 'show version; show crypto key mypubkey rsa', 'Use a supported modulus such as 2048 where allowed', 'Key pair is generated'],
+  ['Algorithm incompatibility', 'Handshake fails after TCP connects', 'Old client or server algorithm mismatch', 'show ip ssh; client ssh -v output', 'Use a modern client and supported IOS algorithms', 'Encrypted session is established'],
+]
+
+const bestPracticeRows: string[][] = [
+  ['Prefer SSHv2', 'Use ip ssh version 2 where supported.'],
+  ['Disable Telnet on VTY', 'Use transport input ssh instead of telnet or all.'],
+  ['Use strong local credentials', 'Choose strong passwords and limit privilege 15 accounts.'],
+  ['Protect private keys', 'Never display, copy or share private key material.'],
+  ['Use appropriate RSA key size', 'Follow platform support and security policy.'],
+  ['Restrict management with ACLs', 'Use access-class to allow known management hosts.'],
+  ['Use a management network', 'Separate management traffic where appropriate.'],
+  ['Avoid unnecessary privilege 15', 'Grant the lowest privilege needed for the task.'],
+  ['Monitor failed logins', 'Review logs and repeated authentication failures.'],
+  ['Keep IOS updated', 'Software updates may fix protocol and crypto issues.'],
+]
+
+const sshSummaryRows: string[][] = [
+  ['Protocol', 'SSH · TCP 22 · encrypted management'],
+  ['Server prerequisites', 'hostname · ip domain-name · RSA key pair'],
+  ['Authentication', 'username ... secret · login local'],
+  ['VTY access', 'line vty 0 4 · transport input ssh'],
+  ['Version', 'ip ssh version 2'],
+  ['Verification', 'show ip ssh · show ssh · show users · show line'],
+]
+
+export const topic48Lesson: Lesson = {
+  topicId: '4.8',
+  title: 'Configure network devices for remote access using SSH',
+  description:
+    'Topic 4.8 يشرح تأمين الوصول عن بُعد إلى Cisco IOS: الفرق بين Telnet وSSH، اتصال SSH، RSA Keys، Local Authentication، VTY Lines، SSHv2، التحقق واستكشاف الأخطاء. الأمثلة تعليمية وليست مخرجات أجهزة حقيقية.',
+  estimatedTime: '~150 دقيقة',
+  steps: [
+    {
+      id: 'what',
+      title: 'Remote Device Management Fundamentals',
+      short: 'الإدارة عن بُعد',
+      blocks: [
+        { type: 'paragraph', text: '**Remote Device Management** يعني الوصول إلى Router أو Switch من جهاز بعيد عبر الشبكة بدلاً من الجلوس أمام الجهاز واستخدام كابل Console. يحتاج المسؤول إلى هذا الوصول للصيانة، تغيير التكوين، مراجعة الحالة، واستكشاف الأخطاء دون التواجد في موقع الجهاز.' },
+        { type: 'diagram', id: 'remote-management-overview', caption: 'نظرة عامة على Console Access مقابل Remote Access.' },
+        { type: 'table', headers: ['Method', 'Console', 'Remote (Telnet / SSH)'], rows: accessRows.slice(1) },
+        { type: 'list', items: [
+          '**Console Access**: اتصال فعلي مباشر بالجهاز؛ مفيد للإعداد الأولي أو الاستعادة.',
+          '**Remote Access**: اتصال عبر IP network؛ مناسب للإدارة اليومية من أي مكان مسموح.',
+          'طرق الوصول الشائعة إلى Cisco Devices تشمل Console وAux (حسب المنصة) وVTY المستخدمة من Telnet أو SSH.',
+        ]},
+        { type: 'paragraph', text: '**Telnet** يعمل على **TCP Port 23** وينقل البيانات **بدون تشفير**. إذا تم اعتراض المسار ولم توجد حماية إضافية، يمكن قراءة أسماء المستخدمين وكلمات المرور. لذلك لا يوفر Telnet Confidentiality مناسبة للإدارة الآمنة.' },
+        { type: 'paragraph', text: '**SSH (Secure Shell)** يعمل على **TCP Port 22** ويوفر **Encrypted Communication** وAuthentication وIntegrity وConfidentiality. لذلك SSH هو الاختيار الأفضل للإدارة عن بُعد.' },
+        { type: 'diagram', id: 'ssh-vs-telnet', caption: 'مقارنة تفاعلية بين Telnet Connection وSSH Connection.' },
+        { type: 'table', headers: ['Feature', 'Telnet', 'SSH'], rows: telnetSshRows.slice(1) },
+        { type: 'callout', tone: 'danger', title: 'قاعدة امتحانية', text: 'Telnet = TCP 23 + plaintext. SSH = TCP 22 + encrypted management. للإدارة الآمنة اختار SSH دائماً.' },
+        { type: 'diagram', id: 'tcp-port-22', caption: 'اختر TCP 22 أو TCP 23 لرؤية مسار الاتصال.' },
+      ],
+    },
+    {
+      id: 'how',
+      title: 'SSH Architecture and Connection Process',
+      short: 'معمارية SSH',
+      blocks: [
+        { type: 'paragraph', text: '**SSH Client** هو الجهاز أو البرنامج الذي يبدأ الاتصال، مثل SSH client على PC المسؤول. **SSH Server** هو الجهاز الذي يستقبل الاتصال ويقدم خدمة SSH، مثل Cisco Router أو Switch.' },
+        { type: 'code', label: 'SSH management scenario - educational', language: 'text', code: `Administrator PC\n192.168.1.10\n       |\n       | SSH - TCP Port 22\n       |\n       v\nCisco Router\n192.168.1.1\nSSH Server` },
+        { type: 'diagram', id: 'ssh-client-server', caption: 'SSH Client وSSH Server في سيناريو الإدارة عن بُعد.' },
+        { type: 'paragraph', text: 'خطوات اتصال SSH بصورة مبسطة:' },
+        { type: 'steps', items: [
+          { title: '1', text: 'TCP Connection Establishment — العميل يفتح اتصال TCP إلى المنفذ 22.' },
+          { title: '2', text: 'SSH Protocol Version Exchange — يتبادل الطرفان إصدار البروتوكول.' },
+          { title: '3', text: 'Key Exchange — يتم الاتفاق على مفاتيح الجلسة.' },
+          { title: '4', text: 'Server Authentication — العميل يتحقق من هوية الخادم عبر Host Key.' },
+          { title: '5', text: 'Encryption Setup — تُفعّل خوارزميات التشفير.' },
+          { title: '6', text: 'User Authentication — يتم التحقق من اسم المستخدم وكلمة المرور.' },
+          { title: '7', text: 'Secure Interactive Session — تُفتح جلسة CLI مشفرة.' },
+        ]},
+        { type: 'diagram', id: 'ssh-connection-lifecycle', caption: 'Animated SSH Connection Flow من TCP connect حتى الجلسة المشفرة.' },
+        { type: 'diagram', id: 'ssh-key-exchange', caption: 'Key Exchange وHost Identity بصورة تعريفية.' },
+        { type: 'table', headers: ['Concept', 'Role', 'CCNA note'], rows: sshRoleRows.slice(1) },
+        { type: 'callout', tone: 'warning', title: 'لا تخلط بين المصادقتين', text: '**Server Authentication** تعني أن العميل يتحقق من هوية الخادم عبر Host Key. أما **User Authentication** فتعني أن الجهاز يتحقق من اسم المستخدم وكلمة المرور. RSA Host Keys ليست كلمة مرور المستخدم.' },
+        { type: 'callout', tone: 'info', title: 'نطاق الدرس', text: 'التركيز هنا على Cisco IOS Configuration. لا توحي بأن كل SSH Implementations تستخدم RSA بالضرورة؛ خوارزميات Host Key وKey Exchange قد تختلف حسب الإصدار والمنصة والعميل.' },
+        { type: 'table', headers: ['Step', 'Name', 'Purpose'], rows: sshStepsRows },
+      ],
+    },
+    {
+      id: 'packet',
+      title: 'RSA Keys',
+      short: 'مفاتيح RSA',
+      blocks: [
+        { type: 'paragraph', text: '**RSA** خوارزمية تشفير تستخدم **Key Pair**: **Public Key** و**Private Key**. المفتاح العام يمكن مشاركته، بينما المفتاح الخاص يجب أن يبقى سرياً داخل الجهاز. SSH Server يحتاج مفاتيح cryptographic ليساعد في Server Identity وSecure Key Exchange ضمن جلسة SSH.' },
+        { type: 'diagram', id: 'rsa-public-private-keys', caption: 'RSA Key Explorer: Public Key مقابل Private Key دون عرض أي مفتاح حقيقي.' },
+        { type: 'list', items: [
+          '**Public Key**: جزء غير سري يمكن مشاركته؛ يساعد في التحقق من هوية الخادم وضمن تبادل المفاتيح.',
+          '**Private Key**: جزء سري جداً؛ لا يُعرض ولا يُرسل ولا يُخزَّن في أمثلة الدرس.',
+          'فقدان أو تسريب Private Key يضعف ثقة الجهاز وأمن إدارته عن بُعد.',
+        ]},
+        { type: 'paragraph', text: '**Key Size** يؤثر في قوة المفتاح والحمل الحسابي. الأحجام التعريفية: 512 و1024 و2048 و4096 bits. الدعم والتوصية يعتمدان على **IOS Version** والمنصة وسياسات الأمان؛ **2048 bits** اختيار تعليمي شائع عند دعمه.' },
+        { type: 'table', headers: ['Key size', 'Educational view', 'Note'], rows: keySizeRows },
+        { type: 'diagram', id: 'rsa-key-size-explorer', caption: 'Interactive RSA Key Size Explorer.' },
+        { type: 'paragraph', text: 'متطلبات توليد RSA Keys على Cisco IOS: **Hostname** و**Domain Name** و**RSA Key Pair**.' },
+        { type: 'code', label: 'Cisco IOS RSA key generation - educational', language: 'cisco', code: `configure terminal\n\nhostname R1\n\nip domain-name ccna.local\n\ncrypto key generate rsa modulus 2048\n\nend` },
+        { type: 'table', headers: ['Command', 'Function'], rows: rsaCommandRows },
+        { type: 'paragraph', text: 'بعض IOS Versions قد تعرض Interactive Prompt عند توليد المفاتيح بدلاً من قبول modulus مباشرة، وقد يختلف Syntax حسب المنصة. راجع دائماً توثيق المنصة قبل التطبيق.' },
+        { type: 'code', label: 'RSA and SSH verification - educational', language: 'cisco', code: `show crypto key mypubkey rsa\nshow ip ssh\nshow running-config` },
+        { type: 'callout', tone: 'danger', title: 'ممنوع عرض المفتاح الخاص', text: 'لا يعرض هذا الدرس ولا أي مثال فيه Private Key حقيقياً أو Sensitive Key Material. أمر `show crypto key mypubkey rsa` يعرض معلومات المفتاح العام فقط.' },
+      ],
+    },
+    {
+      id: 'config',
+      title: 'Local Authentication',
+      short: 'مصادقة محلية',
+      blocks: [
+        { type: 'paragraph', text: '**Local Authentication** تعني أن Cisco Device يخزّن Local User Accounts داخل configuration ويستخدمها للتحقق من Username وPassword عند محاولة الدخول. SSH Server يتحقق من بيانات المستخدم التي يُدخلها العميل مقابل قاعدة المستخدمين المحلية.' },
+        { type: 'table', headers: ['Approach', 'Idea', 'Typical use'], rows: localAuthRows.slice(1) },
+        { type: 'paragraph', text: 'المقارنة مع AAA Server تعريفية فقط: AAA يوفر مصادقة مركزية وAccounting وتوسعاً أفضل، بينما المثال هنا يستخدم قاعدة محلية مناسبة للتعلم.' },
+        { type: 'code', label: 'Local username - educational example', language: 'cisco', code: `configure terminal\n\nusername admin privilege 15 secret StrongPassword123\n\nend` },
+        { type: 'table', headers: ['Part', 'Meaning'], rows: usernameCommandRows },
+        { type: 'paragraph', text: '`password` يخزّن كلمة المرور بدرجة حماية أقل من `secret` في أمثلة Cisco IOS. ومع ذلك، استخدام `secret` وحده لا يعني أن المثال يحقق كل متطلبات Production Security؛ استخدم كلمة مرور قوية وسياسات صلاحيات مناسبة.' },
+        { type: 'callout', tone: 'warning', title: 'Placeholder only', text: '`StrongPassword123` مجرد مثال تعليمي وليس كلمة مرور حقيقية أو توصية إنتاجية. لا تستخدم بيانات اعتماد حقيقية في أمثلة المشروع.' },
+        { type: 'paragraph', text: 'Authentication Flow المبسط:' },
+        { type: 'steps', items: [
+          { title: '1', text: 'SSH Client يتصل بالجهاز.' },
+          { title: '2', text: 'الجهاز يقدم SSH Host Identity.' },
+          { title: '3', text: 'المستخدم يُدخل Username.' },
+          { title: '4', text: 'المستخدم يُدخل Password.' },
+          { title: '5', text: 'الجهاز يتحقق من Local Credentials.' },
+          { title: '6', text: 'يُمنح الوصول أو يُرفض حسب النتيجة.' },
+        ]},
+        { type: 'diagram', id: 'local-authentication-flow', caption: 'Interactive Authentication Flow: Successful Login وFailed Login.' },
+        { type: 'diagram', id: 'ssh-server-vs-user-auth', caption: 'الفرق بين Server Authentication وUser Authentication.' },
+      ],
+    },
+    {
+      id: 'verify',
+      title: 'VTY Lines, SSHv2 and Verification',
+      short: 'VTY والتحقق',
+      blocks: [
+        { type: 'paragraph', text: '**VTY Lines (Virtual Terminal Lines)** هي خطوط افتراضية تستخدمها الاتصالات عن بُعد. تختلف عن **Physical Console Line** الذي يتطلب اتصالاً فعلياً. عند وصول اتصال SSH يختار الجهاز VTY Line متاحاً ويطبّق عليه أوامر مثل `login local` و`transport input ssh`.' },
+        { type: 'paragraph', text: '`line vty 0 4` يضبط خمسة خطوط افتراضية في مثال شائع. عدد VTY Lines يختلف حسب الجهاز والمنصة؛ لذلك الرقم `0 4` ليس قاعدة ثابتة لكل أجهزة Cisco.' },
+        { type: 'diagram', id: 'vty-lines-architecture', caption: 'VTY Lines Architecture واستقبال اتصالات SSH.' },
+        { type: 'paragraph', text: 'Configuration المتكاملة:' },
+        { type: 'code', label: 'Complete SSH configuration - educational', language: 'cisco', code: `configure terminal\n\nhostname R1\n\nip domain-name ccna.local\n\nusername admin privilege 15 secret StrongPassword123\n\ncrypto key generate rsa modulus 2048\n\nip ssh version 2\n\nline vty 0 4\n login local\n transport input ssh\n exit\n\nend` },
+        { type: 'table', headers: ['Command', 'Purpose'], rows: vtyCommandRows },
+        { type: 'diagram', id: 'vty-configuration-flow', caption: 'VTY Configuration Flow خطوة بخطوة.' },
+        { type: 'callout', tone: 'danger', title: 'SSH فقط', text: '`login local` يحدد مصدر المصادقة، و`transport input ssh` يحدد البروتوكول المسموح. لا يكفي أحدهما بدون الآخر لتأمين VTY Access.' },
+        { type: 'table', headers: ['Command', 'Allowed transport', 'Security view'], rows: transportRows },
+        { type: 'paragraph', text: '**SSH Version 1** أقدم وأضعف أمنياً. **SSH Version 2** هو الاختيار المطلوب لأنه يوفر تحسينات في المصادقة والتشفير وسلامة البيانات. بعد الإعداد يجب التحقق من الإصدار بـ `show ip ssh`.' },
+        { type: 'code', label: 'Force SSH version 2 - educational', language: 'cisco', code: `ip ssh version 2` },
+        { type: 'table', headers: ['Version', 'Status', 'Security view'], rows: sshVersionRows },
+        { type: 'diagram', id: 'ssh-version-comparison', caption: 'مقارنة SSHv1 وSSHv2.' },
+        { type: 'code', label: 'SSH verification commands - educational', language: 'cisco', code: `show ip ssh\nshow ssh\nshow crypto key mypubkey rsa\nshow running-config\nshow users\nshow line` },
+        { type: 'table', headers: ['Command', 'What it shows', 'Note'], rows: verificationRows },
+        { type: 'code', label: 'Educational show ip ssh output', language: 'text', code: `SSH Enabled - version 2.0\nAuthentication timeout: 120 secs\nAuthentication retries: 3` },
+        { type: 'callout', tone: 'info', title: 'Educational output', text: 'القيم المعروضة أعلاه تعليمية؛ الإعدادات والقيم الفعلية تختلف حسب IOS Version والمنصة والتكوين.' },
+        { type: 'diagram', id: 'ssh-verification-dashboard', caption: 'SSH Verification Dashboard لأوامر التحقق.' },
+        { type: 'paragraph', text: 'اختبار SSH من العميل:' },
+        { type: 'code', label: 'SSH client command - Linux/macOS/Windows OpenSSH', language: 'bash', code: `ssh admin@192.168.1.1` },
+        { type: 'code', label: 'Windows PowerShell example', language: 'powershell', code: `ssh admin@192.168.1.1` },
+        { type: 'list', items: [
+          '`admin` هو username؛ و`192.168.1.1` هو Device Management IP.',
+          'قد يطلب العميل تأكيد Host Key Verification عند أول اتصال؛ راجع بصمة المفتاح حسب سياسة مؤسستك.',
+          'بعد ذلك يظهر Password Prompt، ثم تُفتح جلسة SSH مشفرة إذا نجحت المصادقة.',
+          'SSH Client متاح افتراضياً في إصدارات حديثة من Windows عند تثبيت OpenSSH Client؛ التوفر يعتمد على التثبيت.',
+        ]},
+      ],
+    },
+    {
+      id: 'mistakes',
+      title: 'SSH Troubleshooting and Security Best Practices',
+      short: 'استكشاف وتأمين',
+      blocks: [
+        { type: 'paragraph', text: 'عند فشل SSH ابدأ من الطبقة الأقل: IP Connectivity ثم SSH Server ثم RSA Keys ثم SSH Version ثم Credentials ثم VTY ثم Transport ثم ACL ثم TCP Port 22. لا تقفز إلى كلمة المرور قبل التأكد من أن الاتصال يصل أصلاً.' },
+        { type: 'code', label: 'Important verification commands', language: 'cisco', code: `show ip ssh\nshow ssh\nshow crypto key mypubkey rsa\nshow running-config\nshow users\nshow line\nshow ip interface brief\nshow ip route` },
+        { type: 'diagram', id: 'ssh-troubleshooting-flow', caption: 'Interactive Troubleshooting Decision Tree يبدأ من SSH Connection Failed.' },
+        { type: 'table', headers: ['Issue', 'Symptoms', 'Possible causes', 'Verification', 'Fix', 'Expected result'], rows: troubleshootingRows },
+        { type: 'paragraph', text: 'أفضل ممارسات تأمين Remote Management:' },
+        { type: 'table', headers: ['Practice', 'Meaning'], rows: bestPracticeRows },
+        { type: 'paragraph', text: 'مثال تعليمي لتقييد SSH Access بـ ACL:' },
+        { type: 'code', label: 'Restrict VTY access with ACL - educational', language: 'cisco', code: `access-list 10 permit 192.168.1.10\n\nline vty 0 4\n access-class 10 in\n transport input ssh\n login local` },
+        { type: 'paragraph', text: 'ACL في المثال تسمح فقط بعنوان Management PC `192.168.1.10` للوصول إلى VTY. أي عنوان آخر يُرفض حتى لو كانت كلمة المرور صحيحة. صيغة ACL ودعم `access-class` قد يختلفان حسب IOS Platform.' },
+        { type: 'diagram', id: 'vty-acl-restriction', caption: 'محاكاة VTY Access Restriction باستخدام ACL.' },
+        { type: 'callout', tone: 'warning', title: 'إدارة آمنة طبقة بطبقة', text: 'SSHv2 + RSA Keys + Local Auth + SSH-only VTY + ACL + Management Network معاً أقوى من أي إعداد منفرد. راجع السجلات ومحاولات الدخول الفاشلة بانتظام.' },
+      ],
+    },
+    {
+      id: 'lab',
+      title: 'Guided SSH Analysis',
+      short: 'تحليل موجّه',
+      blocks: [
+        { type: 'paragraph', text: 'هذا القسم تحليل تعليمي يمكن تنفيذه ذهنياً أو داخل المحاكاة التفاعلية. **لم يتم تنفيذ SSH فعلي على Cisco Hardware أو Packet Tracer.**' },
+        { type: 'diagram', id: 'secure-management-topology', caption: 'Secure Remote Management Topology المستخدمة في التحليل.' },
+        { type: 'steps', items: [
+          { title: '1 — Identify roles', text: 'Admin PC عنده 192.168.1.10 وهو SSH Client؛ الراوتر 192.168.1.1 هو SSH Server.' },
+          { title: '2 — Check prerequisites', text: 'تأكد من hostname وdomain name وRSA key pair قبل تفعيل SSH.' },
+          { title: '3 — Check authentication', text: 'راجع username ... secret وlogin local؛ لا تخلط بينه وبين RSA Host Key.' },
+          { title: '4 — Check VTY', text: 'راجع line vty 0 4 وtransport input ssh وaccess-class إن وُجد.' },
+          { title: '5 — Verify', text: 'استخدم show ip ssh وshow ssh وshow users وshow line ثم اختبر ssh admin@192.168.1.1.' },
+        ]},
+        { type: 'diagram', id: 'ssh-configuration-builder', caption: 'SSH Configuration Builder: جرّب transport input وlogin local.' },
+        { type: 'callout', tone: 'info', title: 'Boundaries', text: 'الرسومات والمخرجات تعليمية؛ لا توجد مفاتيح خاصة حقيقية ولا بيانات اعتماد حقيقية ولا نتائج أجهزة فعلية.' },
+      ],
+    },
+    {
+      id: 'exam',
+      title: 'Hands-on Labs (Simulation)',
+      short: 'Labs',
+      blocks: [
+        { type: 'paragraph', text: '**Labs (Interactive Simulation / Conceptual — ليست تشغيل Packet Tracer أو أجهزة Cisco فعلية)**' },
+
+        { type: 'paragraph', text: '**Lab 1 — Enable SSH on Cisco Router**' },
+        { type: 'code', label: 'Lab 1 topology - educational', language: 'text', code: `Administrator PC\n192.168.1.10\n       |\n     Switch\n       |\n       |\nCisco Router\n192.168.1.1` },
+        { type: 'diagram', id: 'secure-management-topology', caption: 'Topology المستخدمة في Lab 1.' },
+        { type: 'steps', items: [
+          { title: 'Objectives', text: 'تهيئة Router لقبول اتصالات SSH مشفرة بمصادقة محلية.' },
+          { title: 'Topology', text: 'Administrator PC خلف Switch متصل بالراوتر 192.168.1.1.' },
+          { title: 'Initial State', text: 'الراوتر له IP على الواجهة، لكن لا hostname ولا domain ولا RSA keys ولا SSH segment.' },
+          { title: 'Step 1 — Hostname', text: '`configure terminal` ثم `hostname R1`.' },
+          { title: 'Step 2 — Domain', text: '`ip domain-name ccna.local`.' },
+          { title: 'Step 3 — Local user', text: '`username admin privilege 15 secret StrongPassword123`.' },
+          { title: 'Step 4 — RSA keys', text: '`crypto key generate rsa modulus 2048` (إن دعمت المنصة).' },
+          { title: 'Step 5 — SSHv2', text: '`ip ssh version 2`.' },
+          { title: 'Step 6 — VTY', text: '`line vty 0 4` ثم `login local` ثم `transport input ssh`.' },
+          { title: 'Step 7 — Verify SSH', text: '`show ip ssh` يجب أن يُظهر SSH Enabled - version 2.0 في المثال التعليمي.' },
+          { title: 'Step 8 — Simulate login', text: 'من PC:`ssh admin@192.168.1.1` ثم إدخال كلمة المرور المثال.' },
+          { title: 'Expected Results', text: 'اتصال TCP 22 ناجح، Host Identity يُعرض، المصادقة المحلية تنجح، وتُفتح جلسة CLI مشفرة.' },
+          { title: 'Troubleshooting Challenge', text: 'ماذا يحدث لو نسيت `ip domain-name` قبل توليد RSA Key؟' },
+        ]},
+
+        { type: 'paragraph', text: '**Lab 2 — Secure VTY Access**' },
+        { type: 'paragraph', text: 'Scenario: الراوتر يسمح حالياً بـ Telnet وSSH على VTY Lines، ويستخدم خطوط VTY بدون تقييد مصدر الاتصال.' },
+        { type: 'code', label: 'Lab 2 insecure initial config - educational', language: 'cisco', code: `line vty 0 4\n transport input all\n password StrongPassword123\n login` },
+        { type: 'diagram', id: 'ssh-configuration-builder', caption: 'اختر SSH-only مع login local و compare النتيجة.' },
+        { type: 'steps', items: [
+          { title: 'Objectives', text: 'إزالة Telnet، تفعيل المصادقة المحلية، وتقييد عناوين الإدارة بـ ACL.' },
+          { title: 'Topology', text: 'نفس topology Lab 1 مع Management PC 192.168.1.10 وHost آخر 192.168.1.50.' },
+          { title: 'Initial State', text: '`transport input all` يسمح Telnet وSSH؛ لا يوجد access-class.' },
+          { title: 'Step 1 — Inspect', text: '`show running-config` و`show line` لتحديد الإعداد غير الآمن.' },
+          { title: 'Step 2 — Identify fault', text: '`transport input all` قد يسمح Telnet؛ و`login` يستخدم VTY line password بدل Local DB.' },
+          { title: 'Step 3 — SSH only', text: 'تحت VTY:`transport input ssh`.' },
+          { title: 'Step 4 — Local auth', text: 'أنشئ user ثم استخدم `login local`.' },
+          { title: 'Step 5 — Restrict source', text: '`access-list 10 permit 192.168.1.10` ثم `access-class 10 in` تحت VTY.' },
+          { title: 'Step 6 — Allowed host', text: 'من 192.168.1.10 يُتوقع نجاح SSH.' },
+          { title: 'Step 7 — Blocked host', text: 'من 192.168.1.50 يُتوقع رفض الاتصال رغم صحة كلمة المرور.' },
+          { title: 'Verification', text: '`show access-lists` و`show running-config` و`show ssh`.' },
+          { title: 'Expected Results', text: 'SSH فقط مسموح، والمصادقة عبر Local DB، وعنوان الإدارة المحدد فقط يصل إلى VTY.' },
+          { title: 'Troubleshooting Challenge', text: 'ماذا يحدث لو نسيت `access-class 10 in` بعد إنشاء الـ ACL؟' },
+        ]},
+        { type: 'diagram', id: 'vty-acl-restriction', caption: 'محاكاة Allowed وBlocked Management Host.' },
+        { type: 'callout', tone: 'info', title: 'Simulation disclaimer', text: 'هذا Lab لا ينفّذ ACL أو SSH فعلياً على Hardware؛ المحاكاة توضح القرار فقط.' },
+
+        { type: 'paragraph', text: '**Lab 3 — SSH Troubleshooting Challenge**' },
+        { type: 'code', label: 'Lab 3 faulty config - educational', language: 'cisco', code: `hostname R1\n!\nusername admin privilege 15 secret StrongPassword123\n!\nip ssh version 1\n!\nline vty 0 4\n transport input telnet\n login` },
+        { type: 'diagram', id: 'ssh-troubleshooting-flow', caption: 'Decision Tree المستخدم في Lab 3.' },
+        { type: 'steps', items: [
+          { title: 'Objectives', text: 'اكتشاف وإصلاح ستة أخطاء تمنع SSH الآمن.' },
+          { title: 'Topology', text: 'Admin PC 192.168.1.10 ↔ Switch ↔ Router 192.168.1.1.' },
+          { title: 'Initial State', text: 'Config ناقصة/insecure كما في المثال أعلاه.' },
+          { title: 'Fault 1', text: 'Missing domain name — أضف `ip domain-name ccna.local`.' },
+          { title: 'Fault 2', text: 'Missing RSA keys — استخدم `crypto key generate rsa modulus 2048`.' },
+          { title: 'Fault 3', text: 'Incorrect SSH version — استبدل `ip ssh version 1` بـ `ip ssh version 2`.' },
+          { title: 'Fault 4', text: 'Missing local user in auth path — تأكد من `username ... secret` و`login local`.' },
+          { title: 'Fault 5', text: 'Incorrect VTY authentication — استبدل `login` بـ `login local`.' },
+          { title: 'Fault 6', text: 'Telnet allowed instead of SSH — استبدل `transport input telnet` بـ `transport input ssh`.' },
+          { title: 'Fix sequence', text: 'Hostname/domain → user → keys → version 2 → VTY login local → transport input ssh → verification.' },
+          { title: 'Verification', text: '`show ip ssh` و`show running-config` و`show crypto key mypubkey rsa` ثم `ssh admin@192.168.1.1`.' },
+          { title: 'Expected Results', text: 'SSHv2 يعمل، RSA keys موجودة، Local Auth مُفعّل، VTY يقبل SSH فقط، وتسجيل الدخول ينجح.' },
+          { title: 'Troubleshooting Challenge', text: 'بعد الإصلاح ما زال الاتصال يفشل من PC واحد فقط — ما احتمالات ACL أو TCP 22 أو Destination IP؟' },
+        ]},
+        { type: 'callout', tone: 'warning', title: 'Educational simulation only', text: 'المعامل الثلاثة محاكاة تعليمية داخل الموقع، ولا تدّعي تنفيذ SSH فعلي أو استخدام Packet Tracer أو أجهزة Cisco حقيقية.' },
+      ],
+    },
+    {
+      id: 'summary',
+      title: 'Summary & CCNA Exam Quiz',
+      short: 'ملخص واختبار',
+      blocks: [
+        { type: 'diagram', id: 'complete-ssh-config-lifecycle', caption: 'خلاصة دورة إعداد SSH على Cisco IOS.' },
+        { type: 'paragraph', text: '**SSH Fundamentals:** Secure Shell على TCP 22 يوفر تشفيراً ومصادقة وسلامة وسرية؛ Telnet على TCP 23 ينقل البيانات بدون تشفير.' },
+        { type: 'paragraph', text: '**RSA Keys:** Public Key وPrivate Key يشكلان Key Pair؛ الجهاز يحتاجهما للهوية وتبادل المفاتيح. لا تعرض المفتاح الخاص أبداً.' },
+        { type: 'paragraph', text: '**Local Authentication:** `username ... secret` ينشئ المستخدم، و`login local` يخبر VTY باستخدام قاعدة المستخدمين المحلية.' },
+        { type: 'paragraph', text: '**VTY Configuration:** `line vty 0 4` مثال شائع، و`transport input ssh` يسمح بـ SSH فقط. عدد الخطوط يعتمد على المنصة.' },
+        { type: 'paragraph', text: '**SSH Version:** استخدم `ip ssh version 2` وتحقق بـ `show ip ssh`.' },
+        { type: 'table', headers: ['Area', 'Key point'], rows: sshSummaryRows },
+        { type: 'code', label: 'Important commands - educational quick reference', language: 'cisco', code: `hostname R1\nip domain-name ccna.local\nusername admin privilege 15 secret StrongPassword123\ncrypto key generate rsa modulus 2048\nip ssh version 2\nline vty 0 4\n login local\n transport input ssh\nshow ip ssh\nshow ssh\nshow crypto key mypubkey rsa\nshow users\nshow line` },
+        { type: 'paragraph', text: '**اختبار CCNA:** 5 أسئلة، 4 خيارات لكل سؤال، مزيج single-choice وmultiple-select. لا تظهر الإجابة قبل Submit.' },
+        { type: 'quiz', questions: [
+          {
+            id: 'q1',
+            prompt: 'Which default TCP port does SSH use for remote device management?',
+            options: ['TCP 20', 'TCP 22', 'TCP 23', 'TCP 443'],
+            correctIndex: 1,
+            requireSubmit: true,
+            explanation: 'الصح هو **(B)**. SSH يستخدم TCP Port 22؛ أما TCP 23 فهو Telnet.',
+          },
+          {
+            id: 'q2',
+            kind: 'multiple',
+            prompt: 'Which statements about Telnet and SSH are correct? (Choose more than one.)',
+            options: [
+              'Telnet transmits data without encryption.',
+              'SSH provides encrypted remote management.',
+              'Telnet uses TCP port 23 by default.',
+              'SSH provides no authentication.',
+            ],
+            correctIndices: [0, 1, 2],
+            requireSubmit: true,
+            explanation: 'الصح هو **(A) و(B) و(C)**. SSH يوفر مصادقة أيضاً؛ لذلك الخيار (D) خاطئ.',
+          },
+          {
+            id: 'q3',
+            prompt: 'Which VTY command allows SSH only on Cisco IOS VTY lines?',
+            options: [
+              'transport input telnet',
+              'transport input ssh',
+              'login local',
+              'ip ssh version 1',
+            ],
+            correctIndex: 1,
+            requireSubmit: true,
+            explanation: 'الصح هو **(B)**. `transport input ssh` يسمح بـ SSH فقط؛ `login local` يحدد مصدر المصادقة وليس البروتوكول.',
+          },
+          {
+            id: 'q4',
+            kind: 'multiple',
+            prompt: 'Which steps are part of preparing a Cisco IOS device for SSH with local authentication? (Choose more than one.)',
+            options: [
+              'Configure hostname and ip domain-name.',
+              'Generate an RSA key pair.',
+              'Create a local user with username ... secret and use login local.',
+              'Configure transport input telnet on VTY lines.',
+            ],
+            correctIndices: [0, 1, 2],
+            requireSubmit: true,
+            explanation: 'الصح هو **(A) و(B) و(C)**. الخيار (D) يسمح بـ Telnet غير المشفر، وهو عكس الهدف.',
+          },
+          {
+            id: 'q5',
+            kind: 'multiple',
+            prompt: 'Which statements about SSH troubleshooting are correct? (Choose more than one.)',
+            options: [
+              'show ip ssh verifies SSH status and version.',
+              'Missing RSA keys can prevent the SSH server from working.',
+              'access-class on VTY can block a management host.',
+              'If TCP 22 is blocked, SSH automatically uses TCP 23 instead.',
+            ],
+            correctIndices: [0, 1, 2],
+            requireSubmit: true,
+            explanation: 'الصح هو **(A) و(B) و(C)**. SSH لا ينتقل تلقائياً إلى TCP 23؛ هذا المنفذ خاص بـ Telnet.',
+          },
+        ]},
+      ],
+    },
+  ],
+}
