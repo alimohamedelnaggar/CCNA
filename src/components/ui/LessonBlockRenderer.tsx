@@ -690,6 +690,70 @@ import {
   VpnLabTroubleshootDiagram,
   VpnSummaryDiagram,
 } from '../diagrams/VpnDiagrams'
+import {
+  AclOverviewDiagram,
+  AclPacketEntryDiagram,
+  AclProcessingFlowDiagram,
+  AclFirstMatchDiagram,
+  AclOrderMistakeDiagram,
+  AclImplicitDenyDiagram,
+  AclStandardMatchDiagram,
+  AclExtendedMatchDiagram,
+  AclTypeCompareDiagram,
+  AclNumberedIdDiagram,
+  AclNamedSequenceDiagram,
+  AclEditingSequenceDiagram,
+  AclMaskVsWildcardDiagram,
+  AclWildcardBitsDiagram,
+  AclWildcard24Diagram,
+  AclWildcard2526Diagram,
+  AclHostAnyDiagram,
+  AclWildcardMatchDiagram,
+  AclInboundFlowDiagram,
+  AclOutboundFlowDiagram,
+  AclDirectionCompareDiagram,
+  AclStandardPlacementDiagram,
+  AclExtendedPlacementDiagram,
+  AclConfigWorkflowDiagram,
+  AclHitCounterDiagram,
+  AclTroubleshootingTreeDiagram,
+  AclLabStandardDiagram,
+  AclLabExtendedDiagram,
+  AclLabTroubleshootDiagram,
+  AclSummaryDiagram,
+} from '../diagrams/AccessControlListsDiagrams'
+import {
+  L2OverviewDiagram,
+  L2ThreatMapDiagram,
+  L2MacFloodDiagram,
+  L2PortSecFlowDiagram,
+  L2LearningCompareDiagram,
+  L2MacTypesDiagram,
+  L2StickyPersistenceDiagram,
+  L2MaximumDiagram,
+  L2ViolationFlowDiagram,
+  L2ProtectModeDiagram,
+  L2RestrictModeDiagram,
+  L2ShutdownModeDiagram,
+  L2ModeCompareDiagram,
+  L2DhcpDoraDiagram,
+  L2RogueDhcpDiagram,
+  L2DhcpTrustDiagram,
+  L2DhcpFilterDiagram,
+  L2BindingDbDiagram,
+  L2ArpFlowDiagram,
+  L2ArpSpoofDiagram,
+  L2DaiOperationDiagram,
+  L2DaiValidationDiagram,
+  L2DaiTrustDiagram,
+  L2ArchitectureDiagram,
+  L2TroubleshootingDiagram,
+  L2LabPortSecurityDiagram,
+  L2LabDhcpDiagram,
+  L2LabDaiDiagram,
+  L2VerifyCommandsDiagram,
+  L2SummaryDiagram,
+} from '../diagrams/Layer2SecurityDiagrams'
 import { Callout } from './Callout'
 import { CodeBlock } from './CodeBlock'
 import { DataTable } from './DataTable'
@@ -1937,6 +2001,126 @@ function Diagram({ id }: { id: DiagramId }) {
       return <VpnLabTroubleshootDiagram />
     case 'vpn-summary':
       return <VpnSummaryDiagram />
+    case 'acl-overview':
+      return <AclOverviewDiagram />
+    case 'acl-packet-entry':
+      return <AclPacketEntryDiagram />
+    case 'acl-processing-flow':
+      return <AclProcessingFlowDiagram />
+    case 'acl-first-match':
+      return <AclFirstMatchDiagram />
+    case 'acl-order-mistake':
+      return <AclOrderMistakeDiagram />
+    case 'acl-implicit-deny':
+      return <AclImplicitDenyDiagram />
+    case 'acl-standard-match':
+      return <AclStandardMatchDiagram />
+    case 'acl-extended-match':
+      return <AclExtendedMatchDiagram />
+    case 'acl-type-compare':
+      return <AclTypeCompareDiagram />
+    case 'acl-numbered-id':
+      return <AclNumberedIdDiagram />
+    case 'acl-named-sequence':
+      return <AclNamedSequenceDiagram />
+    case 'acl-editing-sequence':
+      return <AclEditingSequenceDiagram />
+    case 'acl-mask-vs-wildcard':
+      return <AclMaskVsWildcardDiagram />
+    case 'acl-wildcard-bits':
+      return <AclWildcardBitsDiagram />
+    case 'acl-wildcard-24':
+      return <AclWildcard24Diagram />
+    case 'acl-wildcard-2526':
+      return <AclWildcard2526Diagram />
+    case 'acl-host-any':
+      return <AclHostAnyDiagram />
+    case 'acl-wildcard-match':
+      return <AclWildcardMatchDiagram />
+    case 'acl-inbound-flow':
+      return <AclInboundFlowDiagram />
+    case 'acl-outbound-flow':
+      return <AclOutboundFlowDiagram />
+    case 'acl-direction-compare':
+      return <AclDirectionCompareDiagram />
+    case 'acl-standard-placement':
+      return <AclStandardPlacementDiagram />
+    case 'acl-extended-placement':
+      return <AclExtendedPlacementDiagram />
+    case 'acl-config-workflow':
+      return <AclConfigWorkflowDiagram />
+    case 'acl-hit-counter':
+      return <AclHitCounterDiagram />
+    case 'acl-troubleshooting-tree':
+      return <AclTroubleshootingTreeDiagram />
+    case 'acl-lab-standard':
+      return <AclLabStandardDiagram />
+    case 'acl-lab-extended':
+      return <AclLabExtendedDiagram />
+    case 'acl-lab-troubleshoot':
+      return <AclLabTroubleshootDiagram />
+    case 'acl-summary':
+      return <AclSummaryDiagram />
+    case 'l2-overview':
+      return <L2OverviewDiagram />
+    case 'l2-threat-map':
+      return <L2ThreatMapDiagram />
+    case 'l2-mac-flood':
+      return <L2MacFloodDiagram />
+    case 'l2-portsec-flow':
+      return <L2PortSecFlowDiagram />
+    case 'l2-learning-compare':
+      return <L2LearningCompareDiagram />
+    case 'l2-mac-types':
+      return <L2MacTypesDiagram />
+    case 'l2-sticky-persistence':
+      return <L2StickyPersistenceDiagram />
+    case 'l2-maximum':
+      return <L2MaximumDiagram />
+    case 'l2-violation-flow':
+      return <L2ViolationFlowDiagram />
+    case 'l2-protect-mode':
+      return <L2ProtectModeDiagram />
+    case 'l2-restrict-mode':
+      return <L2RestrictModeDiagram />
+    case 'l2-shutdown-mode':
+      return <L2ShutdownModeDiagram />
+    case 'l2-mode-compare':
+      return <L2ModeCompareDiagram />
+    case 'l2-dhcp-dora':
+      return <L2DhcpDoraDiagram />
+    case 'l2-rogue-dhcp':
+      return <L2RogueDhcpDiagram />
+    case 'l2-dhcp-trust':
+      return <L2DhcpTrustDiagram />
+    case 'l2-dhcp-filter':
+      return <L2DhcpFilterDiagram />
+    case 'l2-binding-db':
+      return <L2BindingDbDiagram />
+    case 'l2-arp-flow':
+      return <L2ArpFlowDiagram />
+    case 'l2-arp-spoof':
+      return <L2ArpSpoofDiagram />
+    case 'l2-dai-operation':
+      return <L2DaiOperationDiagram />
+    case 'l2-dai-validation':
+      return <L2DaiValidationDiagram />
+    case 'l2-dai-trust':
+      return <L2DaiTrustDiagram />
+    case 'l2-architecture':
+      return <L2ArchitectureDiagram />
+    case 'l2-troubleshooting':
+      return <L2TroubleshootingDiagram />
+    case 'l2-lab-port-security':
+      return <L2LabPortSecurityDiagram />
+    case 'l2-lab-dhcp':
+      return <L2LabDhcpDiagram />
+    case 'l2-lab-dai':
+      return <L2LabDaiDiagram />
+    case 'l2-verify-commands':
+      return <L2VerifyCommandsDiagram />
+    case 'l2-summary':
+      return <L2SummaryDiagram />
   }
 }
 
